@@ -2,9 +2,10 @@ Data Transfer Object
 ====================
 Common library for DTOs
 
-[![Build Status](https://travis-ci.org/CodinPro/data-transfer-object.svg?branch=master)](https://travis-ci.org/CodinPro/data-transfer-object)
-[![Coverage Status](https://coveralls.io/repos/github/CodinPro/data-transfer-object/badge.svg?branch=master)](https://coveralls.io/github/CodinPro/data-transfer-object?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/codin-pro/data-transfer-object/version)](https://packagist.org/packages/codin-pro/data-transfer-object)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/CodinPro/data-transfer-object/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/CodinPro/data-transfer-object/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/CodinPro/data-transfer-object/badges/build.png?b=master)](https://scrutinizer-ci.com/g/CodinPro/data-transfer-object/build-status/master)
+[![Code Coverage](https://scrutinizer-ci.com/g/CodinPro/data-transfer-object/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/CodinPro/data-transfer-object/?branch=master)
 [![Total Downloads](https://poser.pugx.org/codin-pro/data-transfer-object/downloads)](https://packagist.org/packages/codin-pro/data-transfer-object)
 [![License](https://poser.pugx.org/codin-pro/data-transfer-object/license)](https://packagist.org/packages/codin-pro/data-transfer-object)
 
