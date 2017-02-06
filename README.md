@@ -1,4 +1,4 @@
-[![Travis branch](https://img.shields.io/travis/CodinPro/data-transfer-object/master.svg)]()
+[![Build Status](https://travis-ci.org/CodinPro/data-transfer-object.svg?branch=master)](https://travis-ci.org/CodinPro/data-transfer-object)
 
 Data Transfer Object
 ====================
