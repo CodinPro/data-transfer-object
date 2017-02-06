@@ -62,7 +62,7 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
 
     /**
      * Build DTO from provided data
-     * @param array $data
+     * @param object|array $data
      */
     private function buildFromData($data)
     {
