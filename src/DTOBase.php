@@ -39,16 +39,16 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
     {
         switch (gettype($data)) {
             case 'array':
-                $this->buildFromArray($data);
+                $this->buildFromData($data);
                 break;
             case 'object':
-                $this->buildFromObject($data);
+                $this->buildFromData($data);
                 break;
             case 'string':
                 $triedToDecodeData = json_decode($data);
 
                 if ($triedToDecodeData !== null) {
-                    $this->buildFromObject($triedToDecodeData);
+                    $this->buildFromData($triedToDecodeData);
                 } else {
                     throw new \InvalidArgumentException(
                         'DTO can be built from array|object|json, "'.gettype($data).'" given. Probably tried to pass invalid JSON.'
@@ -61,29 +61,16 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
     }
 
     /**
-     * Build DTO from array
+     * Build DTO from provided data
      * @param array $data
      */
-    private function buildFromArray($data)
+    private function buildFromData($data)
     {
         foreach ($this->default as $key => $value) {
-            if (isset($data[$key])) {
-                $this->data[$key] = $data[$key];
-            } else {
-                $this->data[$key] = $value;
-            }
-        }
-    }
-
-    /**
-     * Build DTO from object
-     * @param object $data
-     */
-    private function buildFromObject($data)
-    {
-        foreach ($this->default as $key => $value) {
-            if (isset($data->{$key})) {
+            if (is_object($data) && isset($data->{$key})) {
                 $this->data[$key] = $data->{$key};
+            } else if (is_array($data) && isset($data[$key])) {
+                $this->data[$key] = $data[$key];
             } else {
                 $this->data[$key] = $value;
             }
