@@ -194,8 +194,8 @@ class DTOTest extends \PHPUnit_Framework_TestCase
 
     public function testGetKeyInChain()
     {
-        $dto = new DTOBase(['a' =>['b' =>['c' =>['d' => 'foo']]]]);
-        $dto2 = new DTOBase(['a' =>['b' =>['c' =>['d' => false]]]], json_encode(['a' =>['b' =>['c' =>['d' => 'foo']]]]));
+        $dto = new DTOBase(['a' => ['b' => ['c' => ['d' => 'foo']]]]);
+        $dto2 = new DTOBase(['a' => ['b' => ['c' => ['d' => false]]]], json_encode(['a' => ['b' => ['c' => ['d' => 'foo']]]]));
 
         $this->assertInstanceOf(\ArrayAccess::class, $dto);
         $this->assertEquals('foo', $dto->get('a.b.c.d'));
