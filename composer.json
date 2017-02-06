@@ -1,5 +1,5 @@
 {
-    "name": "CodinPro/data-transfer-object",
+    "name": "codin-pro/data-transfer-object",
     "description": "Common library for DTOs",
     "homepage": "https://github.com/CodinPro/data-transfer-object",
     "minimum-stability": "stable",
