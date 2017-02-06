@@ -4,7 +4,7 @@ namespace CodinPro\DataTransferObject;
 
 class ExampleDTO extends DTO
 {
-    private $foo = true;
-    private $bar = 'string';
-    private $extra = ['a' => 'b'];
+    protected $foo = true;
+    protected $bar = 'string';
+    protected $extra = ['a' => 'b'];
 }
