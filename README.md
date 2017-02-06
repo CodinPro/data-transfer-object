@@ -8,6 +8,7 @@ Common library for DTOs
 [![Code Coverage](https://scrutinizer-ci.com/g/CodinPro/data-transfer-object/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/CodinPro/data-transfer-object/?branch=master)
 [![Total Downloads](https://poser.pugx.org/codin-pro/data-transfer-object/downloads)](https://packagist.org/packages/codin-pro/data-transfer-object)
 [![License](https://poser.pugx.org/codin-pro/data-transfer-object/license)](https://packagist.org/packages/codin-pro/data-transfer-object)
+[![composer.lock available](https://poser.pugx.org/codin-pro/data-transfer-object/composerlock)](https://packagist.org/packages/codin-pro/data-transfer-object)
 
 
 Install
