@@ -2,6 +2,7 @@
 [![Latest Stable Version](https://poser.pugx.org/codin-pro/data-transfer-object/version)](https://packagist.org/packages/codin-pro/data-transfer-object)
 [![Total Downloads](https://poser.pugx.org/codin-pro/data-transfer-object/downloads)](https://packagist.org/packages/codin-pro/data-transfer-object)
 [![License](https://poser.pugx.org/codin-pro/data-transfer-object/license)](https://packagist.org/packages/codin-pro/data-transfer-object)
+-----------------
 
 Data Transfer Object
 ====================
