@@ -17,7 +17,7 @@ class DTOTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildFromArray()
     {
-        $dto = new DTO(self::$initialDefaultData, self::$initialData);
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
         $this->assertEquals('one', $dto->get('test1'));
         $this->assertEquals('2', $dto->get('test2'));
@@ -26,7 +26,7 @@ class DTOTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildFromJson()
     {
-        $dto = new DTO(self::$initialDefaultData, self::$initialJsonData);
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialJsonData);
 
         $this->assertEquals('one', $dto->get('test1'));
         $this->assertEquals('2', $dto->get('test2'));
@@ -39,7 +39,7 @@ class DTOTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('object', gettype($object));
 
-        $dto = new DTO(self::$initialDefaultData, $object);
+        $dto = new DTOBase(self::$initialDefaultData, $object);
 
         $this->assertEquals('one', $dto->get('test1'));
         $this->assertEquals('2', $dto->get('test2'));
@@ -49,7 +49,7 @@ class DTOTest extends \PHPUnit_Framework_TestCase
     public function testBuildFromInvalidJson()
     {
         try {
-            $dto = new DTO(self::$initialDefaultData, '"test1":"one","test3":"three"');
+            $dto = new DTOBase(self::$initialDefaultData, '"test1":"one","test3":"three"');
         } catch (\Exception $e) {
             $this->assertInstanceOf(\InvalidArgumentException::class, $e);
             $this->assertEquals(
@@ -63,7 +63,7 @@ class DTOTest extends \PHPUnit_Framework_TestCase
     public function testBuildFromInvalidDataType()
     {
         try {
-            $dto = new DTO(self::$initialDefaultData, 123);
+            $dto = new DTOBase(self::$initialDefaultData, 123);
         } catch (\Exception $e) {
             $this->assertInstanceOf(\InvalidArgumentException::class, $e);
             $this->assertEquals(
@@ -76,7 +76,7 @@ class DTOTest extends \PHPUnit_Framework_TestCase
 
     public function testSetValue()
     {
-        $dto = new DTO(self::$initialDefaultData, self::$initialData);
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
         $dto['test4'] = 'four';
 
         $this->assertEquals('four', $dto->get('test4'));
@@ -84,14 +84,14 @@ class DTOTest extends \PHPUnit_Framework_TestCase
 
     public function testCount()
     {
-        $dto = new DTO(self::$initialDefaultData, self::$initialData);
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
         $this->assertEquals(count(array_keys(self::$initialDefaultData)), count($dto));
     }
 
     public function testOffsetExists()
     {
-        $dto = new DTO(self::$initialDefaultData, self::$initialData);
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
         $this->assertNotEmpty($dto['test1']);
         $this->assertTrue(isset($dto['test1']));
@@ -99,18 +99,18 @@ class DTOTest extends \PHPUnit_Framework_TestCase
 
     public function testUnset()
     {
-        $dto = new DTO(self::$initialDefaultData, self::$initialData);
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
         unset($dto['test1']);
 
         $this->assertEquals('1', $dto->get('test1'));
     }
 
-    public function testGetNonExistantKey()
+    public function testGetNonExistentKey()
     {
-        $dto = new DTO(self::$initialDefaultData, self::$initialData);
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
-        $key = 'nonExistantKey';
+        $key = 'nonExistentKey';
 
         try {
             $dto->get($key);
@@ -122,14 +122,14 @@ class DTOTest extends \PHPUnit_Framework_TestCase
 
     public function testFieldGetter()
     {
-        $dto = new DTO(self::$initialDefaultData, self::$initialData);
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
         $this->assertEquals('one', $dto->test1);
     }
 
     public function testFieldSetter()
     {
-        $dto = new DTO(self::$initialDefaultData, self::$initialData);
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
         $dto->test1 = 'test1';
 
@@ -141,14 +141,14 @@ class DTOTest extends \PHPUnit_Framework_TestCase
 
     public function testToString()
     {
-        $dto = new DTO(self::$initialDefaultData, self::$initialData);
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
         $this->assertEquals('{"test1":"one","test2":"2","test3":"three"}', (string)$dto);
     }
 
     public function testCanIterateDTO()
     {
-        $dto = new DTO(self::$initialDefaultData, self::$initialData);
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
         $expectedArray = ['test1' => 'one', 'test2' => '2', 'test3' => 'three'];
         $gotArray = [];
@@ -162,7 +162,7 @@ class DTOTest extends \PHPUnit_Framework_TestCase
 
     public function testIfSerializerSetFromConstructor()
     {
-        $dto = new DTO([], [], $this->getMockBuilder(DTOSerializerInterface::class)->getMock());
+        $dto = new DTOBase([], [], $this->getMockBuilder(DTOSerializerInterface::class)->getMock());
 
         $this->assertInstanceOf(
             DTOSerializerInterface::class,
@@ -173,16 +173,16 @@ class DTOTest extends \PHPUnit_Framework_TestCase
 
     public function testIfSerializerNotSetFromConstructor()
     {
-        $dto = new DTO([], []);
+        $dto = new DTOBase([], []);
 
         $this->assertInstanceOf(JsonSerializer::class, $dto->getSerializer(), 'Default serializer must be JsonSerializer');
     }
 
-    public function testGetNonExistantKeyInChain()
+    public function testGetNonExistentKeyInChain()
     {
-        $dto = new DTO(self::$initialDefaultData, self::$initialData);
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
-        $key = 'non.Existant.Key';
+        $key = 'non.Existent.Key';
 
         try {
             $dto->get($key);
@@ -194,8 +194,8 @@ class DTOTest extends \PHPUnit_Framework_TestCase
 
     public function testGetKeyInChain()
     {
-        $dto = new DTO(['a' =>['b' =>['c' =>['d' => 'foo']]]]);
-        $dto2 = new DTO(['a' =>['b' =>['c' =>['d' => false]]]], json_encode(['a' =>['b' =>['c' =>['d' => 'foo']]]]));
+        $dto = new DTOBase(['a' =>['b' =>['c' =>['d' => 'foo']]]]);
+        $dto2 = new DTOBase(['a' =>['b' =>['c' =>['d' => false]]]], json_encode(['a' =>['b' =>['c' =>['d' => 'foo']]]]));
 
         $this->assertInstanceOf(\ArrayAccess::class, $dto);
         $this->assertEquals('foo', $dto->get('a.b.c.d'));

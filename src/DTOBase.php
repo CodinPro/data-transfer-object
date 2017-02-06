@@ -14,8 +14,8 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
 
     /**
      * DTO constructor.
-     * @param mixed $data
      * @param array $default
+     * @param array|object|string $data
      * @param DTOSerializerInterface $serializer
      * @throws \InvalidArgumentException
      */
@@ -25,11 +25,7 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
             $this->default = $default;
         }
 
-        $this->serializer = $serializer;
-
-        if ($serializer === null) {
-            $this->serializer = new JsonSerializer();
-        }
+        $this->serializer = $serializer === null ? new JsonSerializer() : $serializer;
 
         $this->build($data);
     }
@@ -239,6 +235,10 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
      */
     private function serialize()
     {
+        if ($this->serializer === null) {
+            return 'Serializer not set';
+        }
+
         return $this->serializer->serialize($this->data);
     }
 
@@ -248,5 +248,16 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
     public function getSerializer()
     {
         return $this->serializer;
+    }
+
+    /**
+     * @param DTOSerializerInterface $serializer
+     * @return DTOBase
+     */
+    public function setSerializer(DTOSerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+
+        return $this;
     }
 }
