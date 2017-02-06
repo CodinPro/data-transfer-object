@@ -194,9 +194,12 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
             $keys = explode('.', $offset);
             $scope = $this->data;
             foreach ($keys as $key) {
-                if ((is_array($scope) || $scope instanceof ArrayAccess) && isset($scope[$key])) {
+                $isAccessibleArray = (is_array($scope) || $scope instanceof ArrayAccess) && isset($scope[$key]);
+                $isAccessibleObject = is_object($scope) && isset($scope->{$key});
+
+                if ($isAccessibleArray) {
                     $scope = $scope[$key];
-                } else if (is_object($scope) && isset($scope->{$key})) {
+                } elseif ($isAccessibleObject) {
                     $scope = $scope->{$key};
                 } else {
                     throw new \InvalidArgumentException('Non existent offset given in offset chain: '.$key);
