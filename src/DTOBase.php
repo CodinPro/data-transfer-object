@@ -195,7 +195,6 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
             $scope = $this->data;
             foreach ($keys as $key) {
                 $isAccessibleArray = (is_array($scope) || $scope instanceof ArrayAccess) && isset($scope[$key]);
-
                 $isAccessibleObject = is_object($scope) && isset($scope->{$key});
 
                 if ($isAccessibleArray) {
