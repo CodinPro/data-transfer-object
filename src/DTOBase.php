@@ -182,7 +182,7 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
 
     /**
      * Get nested values using "dot" notation
-     * @param $offset
+     * @param string $offset
      * @return mixed
      * @throws \InvalidArgumentException
      */
