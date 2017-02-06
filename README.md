@@ -8,6 +8,7 @@ Common library for DTOs
 [![Total Downloads](https://poser.pugx.org/codin-pro/data-transfer-object/downloads)](https://packagist.org/packages/codin-pro/data-transfer-object)
 [![License](https://poser.pugx.org/codin-pro/data-transfer-object/license)](https://packagist.org/packages/codin-pro/data-transfer-object)
 
+
 Install
 =======
 `composer require codin-pro/data-transfer-object`
