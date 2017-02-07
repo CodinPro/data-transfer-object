@@ -39,21 +39,11 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
     {
         switch (gettype($data)) {
             case 'array':
-                $this->buildFromData($data);
-                break;
             case 'object':
                 $this->buildFromData($data);
                 break;
             case 'string':
-                $triedToDecodeData = json_decode($data);
-
-                if ($triedToDecodeData !== null) {
-                    $this->buildFromData($triedToDecodeData);
-                } else {
-                    throw new \InvalidArgumentException(
-                        'DTO can be built from array|object|json, "'.gettype($data).'" given. Probably tried to pass invalid JSON.'
-                    );
-                }
+                $this->buildFromJson($data);
                 break;
             default:
                 throw new \InvalidArgumentException('DTO can be built from array|object|json, "'.gettype($data).'" given.');
@@ -250,5 +240,23 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
         $this->serializer = $serializer;
 
         return $this;
+    }
+
+    /**
+     * Try to build from provided string as JSON
+     * @param string $data
+     * @throws \InvalidArgumentException
+     */
+    private function buildFromJson($data)
+    {
+        $triedToDecodeData = json_decode($data);
+
+        if ($triedToDecodeData !== null) {
+            $this->buildFromData($triedToDecodeData);
+        } else {
+            throw new \InvalidArgumentException(
+                'DTO can be built from array|object|json, "'.gettype($data).'" given. Probably tried to pass invalid JSON.'
+            );
+        }
     }
 }
