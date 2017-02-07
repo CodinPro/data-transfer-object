@@ -11,10 +11,14 @@
 		 syntaxCheck="true"
 >
 	<filter>
-		<whitelist>
+		<whitelist processUncoveredFilesFromWhitelist="true">
 			<directory suffix=".php">./src/</directory>
 		</whitelist>
 	</filter>
+	<logging>
+		<log type="coverage-clover"
+			 target="tests/coverage-clover.xml"/>
+	</logging>
 	<testsuites>
 		<testsuite name="DTO Tests">
 			<directory suffix=".php">./tests/</directory>

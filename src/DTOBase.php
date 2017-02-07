@@ -39,21 +39,11 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
     {
         switch (gettype($data)) {
             case 'array':
-                $this->buildFromData($data);
-                break;
             case 'object':
                 $this->buildFromData($data);
                 break;
             case 'string':
-                $triedToDecodeData = json_decode($data);
-
-                if ($triedToDecodeData !== null) {
-                    $this->buildFromData($triedToDecodeData);
-                } else {
-                    throw new \InvalidArgumentException(
-                        'DTO can be built from array|object|json, "'.gettype($data).'" given. Probably tried to pass invalid JSON.'
-                    );
-                }
+                $this->buildFromJson($data);
                 break;
             default:
                 throw new \InvalidArgumentException('DTO can be built from array|object|json, "'.gettype($data).'" given.');
@@ -194,12 +184,9 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
             $keys = explode('.', $offset);
             $scope = $this->data;
             foreach ($keys as $key) {
-                $isAccessibleArray = (is_array($scope) || $scope instanceof ArrayAccess) && isset($scope[$key]);
-                $isAccessibleObject = is_object($scope) && isset($scope->{$key});
-
-                if ($isAccessibleArray) {
+                if ((is_array($scope) || $scope instanceof ArrayAccess) && isset($scope[$key])) {
                     $scope = $scope[$key];
-                } elseif ($isAccessibleObject) {
+                } elseif (is_object($scope) && isset($scope->{$key})) {
                     $scope = $scope->{$key};
                 } else {
                     throw new \InvalidArgumentException('Non existent offset given in offset chain: '.$key);
@@ -249,5 +236,23 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
         $this->serializer = $serializer;
 
         return $this;
+    }
+
+    /**
+     * Try to build from provided string as JSON
+     * @param string $data
+     * @throws \InvalidArgumentException
+     */
+    private function buildFromJson($data)
+    {
+        $triedToDecodeData = json_decode($data);
+
+        if ($triedToDecodeData !== null) {
+            $this->buildFromData($triedToDecodeData);
+        } else {
+            throw new \InvalidArgumentException(
+                'DTO can be built from array|object|json, "'.gettype($data).'" given. Probably tried to pass invalid JSON.'
+            );
+        }
     }
 }

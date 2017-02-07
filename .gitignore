@@ -3,3 +3,5 @@
 vendor
 composer.lock
 /tests/coverage
+/tests/coverage-clover.xml
+.sonar
