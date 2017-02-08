@@ -11,6 +11,11 @@ namespace CodinPro\DataTransferObject;
 trait DTOAccessorTrait
 {
     /**
+     * @property $data
+     * @property $default
+     */
+
+    /**
      * Check if offset exists
      * @param string $offset
      * @return bool

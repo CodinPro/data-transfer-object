@@ -10,6 +10,9 @@ namespace CodinPro\DataTransferObject;
 
 class DTOBaseBuilder
 {
+    /** @var DTOBase $dto */
+    private $dto;
+
     public function __construct(DTOBase $dtoBase)
     {
         $this->dto = $dtoBase;

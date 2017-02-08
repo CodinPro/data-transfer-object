@@ -11,6 +11,10 @@ namespace CodinPro\DataTransferObject;
 trait DTOIteratorTrait
 {
     /**
+     * @property $data
+     */
+
+    /**
      * Get custom iterator
      * @return DTOIterator
      */
