@@ -58,6 +58,7 @@ class DTOTest extends \PHPUnit_Framework_TestCase
             );
         }
 
+        $this->assertFalse(isset($dto));
     }
 
     public function testBuildFromInvalidDataType()
@@ -72,6 +73,7 @@ class DTOTest extends \PHPUnit_Framework_TestCase
             );
         }
 
+        $this->assertFalse(isset($dto));
     }
 
     public function testSetValue()
@@ -204,5 +206,19 @@ class DTOTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $dto['a.b.c.d']);
         $this->assertEquals('foo', $dto2['a.b.c.d']);
         $this->assertEquals(['d' => 'foo'], $dto->get('a.b.c'));
+    }
+
+    public function testToArrayWithDefaultSerializer(){
+        $array = ['a' => ['b' => ['c' => ['d' => 'foo']]]];
+        $dto = new DTOBase(['a' => ['b' => ['c' => ['d' => 'foo']]]]);
+
+        $this->assertEquals($array, $dto->toArray());
+    }
+
+    public function testToArrayWithCustomSerializer(){
+        $array = ['a' => ['b' => ['c' => ['d' => 'foo']]]];
+        $dto = new DTOBase($array, [], $this->getMockBuilder(DTOSerializerInterface::class)->getMock());
+
+        $this->assertEquals($array, $dto->toArray());
     }
 }

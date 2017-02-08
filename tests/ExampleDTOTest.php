@@ -46,6 +46,8 @@ class ExampleDTOTest extends \PHPUnit_Framework_TestCase
                 $e->getMessage()
             );
         }
+
+        $this->assertFalse(isset($dto));
     }
 
     public function testBuildFromInvalidDataType()
@@ -60,6 +62,7 @@ class ExampleDTOTest extends \PHPUnit_Framework_TestCase
             );
         }
 
+        $this->assertFalse(isset($dto));
     }
 
     public function testSetValue()
@@ -192,7 +195,7 @@ class ExampleDTOTest extends \PHPUnit_Framework_TestCase
 
     public function testGetKeyInChainOfArray()
     {
-        $dto = new ExampleDTO(['foo' =>['b' =>['c' =>['d' => 'foo']]]]);
+        $dto = new ExampleDTO(['foo' => ['b' => ['c' => ['d' => 'foo']]]]);
 
         $this->assertInstanceOf(\ArrayAccess::class, $dto);
 
@@ -204,7 +207,7 @@ class ExampleDTOTest extends \PHPUnit_Framework_TestCase
 
     public function testGetKeyInChainOfObject()
     {
-        $dto = new ExampleDTO(json_encode(['foo' =>['b' =>['c' =>['d' => 'foo']]]]));
+        $dto = new ExampleDTO(json_encode(['foo' => ['b' => ['c' => ['d' => 'foo']]]]));
 
         $this->assertInstanceOf(\ArrayAccess::class, $dto);
 
