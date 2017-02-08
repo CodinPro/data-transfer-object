@@ -27,8 +27,10 @@ class DTOBaseBuilder
     {
         switch (gettype($data)) {
             case 'array':
+                $this->buildFromArray($data);
+                break;
             case 'object':
-                $this->buildFromData($data);
+                $this->buildFromObject($data);
                 break;
             case 'string':
                 $this->buildFromJson($data);
@@ -40,16 +42,29 @@ class DTOBaseBuilder
 
     /**
      * Build DTO from provided data
-     * @param object|array $data
+     * @param $array
      */
-    private function buildFromData($data)
+    private function buildFromArray($array)
     {
         foreach ($this->dto->getDefault() as $key => $value) {
-            if (is_object($data) && isset($data->{$key})) {
-                $this->dto[$key] = $data->{$key};
-            } else if (is_array($data) && isset($data[$key])) {
-                $this->dto[$key] = $data[$key];
+            if (isset($array[$key])) {
+                $this->dto[$key] = $array[$key];
             } else {
+                $this->dto[$key] = $value;
+            }
+        }
+    }
+
+    /**
+     * Build DTO from provided data
+     * @param $object
+     */
+    private function buildFromObject($object)
+    {
+        foreach ($this->dto->getDefault() as $key => $value) {
+            if (isset($object->{$key})) {
+                $this->dto[$key] = $object->{$key};
+            }else {
                 $this->dto[$key] = $value;
             }
         }
@@ -65,7 +80,7 @@ class DTOBaseBuilder
         $triedToDecodeData = json_decode($data);
 
         if ($triedToDecodeData !== null) {
-            $this->buildFromData($triedToDecodeData);
+            $this->buildFromObject($triedToDecodeData);
         } else {
             throw new \InvalidArgumentException(
                 'DTO can be built from array|object|json, "'.gettype($data).'" given. Probably tried to pass invalid JSON.'
