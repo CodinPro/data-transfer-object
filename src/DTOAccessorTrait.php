@@ -8,13 +8,12 @@
 
 namespace CodinPro\DataTransferObject;
 
+/**
+ * @property mixed $data DTO data
+ * @property array $default DTO keys and default values
+ */
 trait DTOAccessorTrait
 {
-    /**
-     * @property $data
-     * @property $default
-     */
-
     /**
      * Check if offset exists
      * @param string $offset

@@ -8,12 +8,12 @@
 
 namespace CodinPro\DataTransferObject;
 
+/**
+ * @property mixed $data DTO data
+ * @property array $default DTO keys and default values
+ */
 trait DTOIteratorTrait
 {
-    /**
-     * @property $data
-     */
-
     /**
      * Get custom iterator
      * @return DTOIterator
