@@ -15,6 +15,13 @@ namespace CodinPro\DataTransferObject;
 trait DTOAccessorTrait
 {
     /**
+     * Get value by offset or nested structure
+     * @param string $offset
+     * @return mixed
+     */
+    public abstract function get($offset);
+
+    /**
      * Check if offset exists
      * @param string $offset
      * @return bool
