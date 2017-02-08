@@ -133,7 +133,7 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
     {
         if (isset($scope->{$key})) {
             return $scope->{$key};
-        }elseif (isset($scope[$key])) {
+        } elseif (isset($scope[$key])) {
             return $scope[$key];
         }
 
