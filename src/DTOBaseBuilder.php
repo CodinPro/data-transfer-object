@@ -64,7 +64,7 @@ class DTOBaseBuilder
         foreach ($this->dto->getDefault() as $key => $value) {
             if (isset($object->{$key})) {
                 $this->dto[$key] = $object->{$key};
-            }else {
+            } else {
                 $this->dto[$key] = $value;
             }
         }

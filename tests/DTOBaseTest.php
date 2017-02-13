@@ -117,7 +117,7 @@ class DTOTest extends \PHPUnit_Framework_TestCase
         try {
             $dto->get($key);
         } catch (\Exception $e) {
-            $this->assertEquals('Offset '.$key.' does not exist.', $e->getMessage());
+            $this->assertEquals('Offset ' . $key . ' does not exist.', $e->getMessage());
             $this->assertInstanceOf(\InvalidArgumentException::class, $e);
         }
     }
@@ -199,6 +199,12 @@ class DTOTest extends \PHPUnit_Framework_TestCase
         $dto = new DTOBase(['a' => ['b' => ['c' => ['d' => 'foo']]]]);
         $dto2 = new DTOBase(['a' => ['b' => ['c' => ['d' => false]]]], json_encode(['a' => ['b' => ['c' => ['d' => 'foo']]]]));
 
+        $_dto = new \stdClass();
+        $_dto2 = new \stdClass();
+        $_dto2->d = 'foo';
+        $_dto->a = ['b' => ['c' => $_dto2]];
+        $dto3 = new DTOBase(['a' => null], $_dto);
+
         $this->assertInstanceOf(\ArrayAccess::class, $dto);
         $this->assertEquals('foo', $dto->get('a.b.c.d'));
         $this->assertEquals('foo', $dto2->get('a.b.c.d'));
@@ -206,16 +212,19 @@ class DTOTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $dto['a.b.c.d']);
         $this->assertEquals('foo', $dto2['a.b.c.d']);
         $this->assertEquals(['d' => 'foo'], $dto->get('a.b.c'));
+        $this->assertEquals('foo', $dto3->get('a.b.c.d'));
     }
 
-    public function testToArrayWithDefaultSerializer(){
+    public function testToArrayWithDefaultSerializer()
+    {
         $array = ['a' => ['b' => ['c' => ['d' => 'foo']]]];
         $dto = new DTOBase(['a' => ['b' => ['c' => ['d' => 'foo']]]]);
 
         $this->assertEquals($array, $dto->toArray());
     }
 
-    public function testToArrayWithCustomSerializer(){
+    public function testToArrayWithCustomSerializer()
+    {
         $array = ['a' => ['b' => ['c' => ['d' => 'foo']]]];
         $dto = new DTOBase($array, [], $this->getMockBuilder(DTOSerializerInterface::class)->getMock());
 
