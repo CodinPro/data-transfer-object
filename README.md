@@ -59,6 +59,14 @@ $dto->foo; // true
 $dto->bar; // "string"
 $dto->extra; // "some extra value"
 ```
+
+#####Set value
+```php
+$dto = new ExampleDTO();
+$dto->foo = 'baz'; // "baz"
+$dto['bar'] = 'test'; // "test"
+```
+
 #####Unset value
 ```php
 $dto = new ExampleDTO(['foo' => "baz"]);
