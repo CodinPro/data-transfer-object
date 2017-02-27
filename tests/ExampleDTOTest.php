@@ -11,6 +11,7 @@ class ExampleDTOTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $dto->get('foo'));
         $this->assertEquals('string', $dto->get('bar'));
         $this->assertEquals(['a' => 'b'], $dto->get('extra'));
+        $this->assertEquals(null, $dto->get('some'));
     }
 
     public function testBuildFromJson()
@@ -77,7 +78,7 @@ class ExampleDTOTest extends \PHPUnit_Framework_TestCase
     {
         $dto = new ExampleDTO();
 
-        $this->assertCount(3, $dto);
+        $this->assertCount(4, $dto);
     }
 
     public function testOffsetExists()
@@ -136,7 +137,7 @@ class ExampleDTOTest extends \PHPUnit_Framework_TestCase
     {
         $dto = new ExampleDTO();
 
-        $this->assertEquals('{"foo":true,"bar":"string","extra":{"a":"b"}}', (string)$dto);
+        $this->assertEquals('{"foo":true,"bar":"string","extra":{"a":"b"},"some":null}', (string)$dto);
     }
 
     public function testToStringWithCustomSerializer()
@@ -144,14 +145,14 @@ class ExampleDTOTest extends \PHPUnit_Framework_TestCase
         $dto = new ExampleDTO();
         $dto->setSerializer(new CustomSerializer());
 
-        $this->assertEquals('a:3:{s:3:"foo";b:1;s:3:"bar";s:6:"string";s:5:"extra";a:1:{s:1:"a";s:1:"b";}}', (string)$dto);
+        $this->assertEquals('a:4:{s:3:"foo";b:1;s:3:"bar";s:6:"string";s:5:"extra";a:1:{s:1:"a";s:1:"b";}s:4:"some";N;}', (string)$dto);
     }
 
     public function testCanIterateDTO()
     {
         $dto = new ExampleDTO();
 
-        $expectedArray = ['foo' => true, 'bar' => 'string', 'extra' => ['a' => 'b']];
+        $expectedArray = ['foo' => true, 'bar' => 'string', 'extra' => ['a' => 'b'], 'some' => null];
         $gotArray = [];
 
         foreach ($dto as $key => $value) {

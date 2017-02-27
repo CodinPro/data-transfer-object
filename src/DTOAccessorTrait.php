@@ -39,7 +39,7 @@ trait DTOAccessorTrait
      */
     private function offsetGetScalar($offset)
     {
-        if (isset($this->data[$offset])) {
+        if (array_key_exists($offset, $this->data)) {
             return $this->data[$offset];
         }
 
@@ -54,7 +54,7 @@ trait DTOAccessorTrait
      */
     private function getDefaultValue($offset)
     {
-        if (isset($this->default[$offset])) {
+        if (array_key_exists($offset, $this->default)) {
             return $this->default[$offset];
         }
 
