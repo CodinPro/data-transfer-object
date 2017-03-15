@@ -43,7 +43,7 @@ class ExampleDTO extends DTO
 
 After this *"painful"* setup, you can use fresh-made DTO like follows:
 
-#####Without providing data (uses default values from your DTO)
+**Without providing data (uses default values from your DTO)**
 ```php
 $dto = new ExampleDTO();
 $dto->foo; // true
@@ -51,7 +51,7 @@ $dto->bar; // "string"
 $dto->extra; // ["a" => "b"]
 ```
 
-#####Initialize with array/object/json
+**Initialize with array/object/json**
 ```php
 // its allowed to init from array, object or json
 $dto = new ExampleDTO('{"extra":"some extra value"}');
@@ -60,14 +60,14 @@ $dto->bar; // "string"
 $dto->extra; // "some extra value"
 ```
 
-#####Set value
+**Set value**
 ```php
 $dto = new ExampleDTO();
 $dto->foo = 'baz'; // "baz"
 $dto['bar'] = 'test'; // "test"
 ```
 
-#####Unset value
+**Unset value**
 ```php
 $dto = new ExampleDTO(['foo' => "baz"]);
 $dto->foo; // "baz"
@@ -77,7 +77,7 @@ $dto->bar; // "string"
 $dto->extra; // ["a" => "b"]
 ```
 
-#####Nested getter
+**Nested getter**
 ```php
 $dto = new ExampleDTO(['extra' => ['a' => ['b' => ['c' => 'd']]]]);
 $dto->foo; // "baz"
@@ -92,7 +92,7 @@ $dto->get('extra.a.b'); // ['c' => 'd']
 $dto->get('extra.a.b.c'); // "d"
 ```
 
-#####Serializer
+**Serializer**
 ```php
 $dto = new ExampleDTO();
 // when trying to convert to string, it calls inner $this->serialize();
