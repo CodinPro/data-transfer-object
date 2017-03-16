@@ -41,7 +41,7 @@ class ExampleDTO extends DTO
 }
 ```
 
-After this *"painful"* setup, you are ready to go. You can find more usage examples on [Wiki](/CodinPro/data-transfer-object/wiki/Usage).
+After this *"painful"* setup, you are ready to go. You can find more usage examples on [Wiki](https://github.com/CodinPro/data-transfer-object/wiki/Usage).
 
 
 Contribution
