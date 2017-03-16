@@ -26,7 +26,7 @@ or
 Usage
 =====
 All you need for your custom DTO is extending from 
-CodinPro\DataTransferObject\DTO class and
+`CodinPro\DataTransferObject\DTO` class and
 defining fields as `protected`. That's it!
 ```php
 <?php
