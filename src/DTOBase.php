@@ -9,7 +9,7 @@ use IteratorAggregate;
 class DTOBase implements ArrayAccess, IteratorAggregate, Countable
 {
     protected $innerDTOData;
-    protected $default = [];
+    protected $innerDTODefault = [];
     private $serializer = null;
 
     use DTOAccessorTrait;
@@ -25,7 +25,7 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
     public function __construct($default = [], $data = [], DTOSerializerInterface $serializer = null)
     {
         if (count($default) > 0) {
-            $this->default = $default;
+            $this->innerDTODefault = $default;
         }
 
         $this->serializer = $serializer === null ? new JsonSerializer() : $serializer;
@@ -103,7 +103,7 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
      */
     public function getDefault()
     {
-        return $this->default;
+        return $this->innerDTODefault;
     }
 
     /**
