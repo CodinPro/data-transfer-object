@@ -44,7 +44,7 @@ class DTOBaseBuilder
      * Restrict internalDTO* fields in data
      * @param $fieldName
      */
-    private function validateFieldName($fieldName){
+    private function validateFieldName($fieldName) {
         if (in_array($fieldName, ['internalDTOData', 'internalDTODefault'], true)) {
             throw new \InvalidArgumentException('internalDTO* fields are restricted');
         }
