@@ -39,6 +39,16 @@ class DTOBaseBuilder
                 throw new \InvalidArgumentException('DTO can be built from array|object|json, "'.gettype($data).'" given.');
         }
     }
+    
+    /**
+     * Restrict internalDTO* fields in data
+     * @param $fieldName
+     */
+    private function validateFieldName($fieldName){
+        if (in_array($fieldName, ['internalDTOData', 'internalDTODefault'], true)) {
+            throw new \InvalidArgumentException('internalDTO* fields are restricted');
+        }
+    }
 
     /**
      * Build DTO from provided data
@@ -47,6 +57,8 @@ class DTOBaseBuilder
     private function buildFromArray($array)
     {
         foreach ($this->dto->getDefault() as $key => $value) {
+            $this->validateFieldName($key);
+            
             if (isset($array[$key])) {
                 $this->dto[$key] = $array[$key];
             } else {
@@ -62,6 +74,8 @@ class DTOBaseBuilder
     private function buildFromObject($object)
     {
         foreach ($this->dto->getDefault() as $key => $value) {
+            $this->validateFieldName($key);
+            
             if (isset($object->{$key})) {
                 $this->dto[$key] = $object->{$key};
             } else {
