@@ -224,7 +224,7 @@ class ExampleDTOTest extends \PHPUnit_Framework_TestCase
         try {
             $dto = new ExampleDTO(['internalDTOData' => 'test']);
         } catch (\Exception $e) {
-            $this->assertEquals('internalDTO* fields are restricted');
+            $this->assertEquals('internalDTO* fields are restricted', $e->getMessage());
         }
     }
     
@@ -233,7 +233,7 @@ class ExampleDTOTest extends \PHPUnit_Framework_TestCase
         try {
             $dto = new ExampleDTO(['internalDTODefault' => 'test']);
         } catch (\Exception $e) {
-            $this->assertEquals('internalDTO* fields are restricted');
+            $this->assertEquals('internalDTO* fields are restricted', $e->getMessage());
         }
     }
 }
