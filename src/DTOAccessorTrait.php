@@ -9,7 +9,7 @@
 namespace CodinPro\DataTransferObject;
 
 /**
- * @property mixed $data DTO data
+ * @property mixed $innerDTOData DTO data
  * @property array $default DTO keys and default values
  */
 trait DTOAccessorTrait
