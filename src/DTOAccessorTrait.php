@@ -10,7 +10,7 @@ namespace CodinPro\DataTransferObject;
 
 /**
  * @property mixed $innerDTOData DTO data
- * @property array $default DTO keys and default values
+ * @property array $innerDTODefault DTO keys and default values
  */
 trait DTOAccessorTrait
 {
@@ -54,8 +54,8 @@ trait DTOAccessorTrait
      */
     private function getDefaultValue($offset)
     {
-        if (array_key_exists($offset, $this->default)) {
-            return $this->default[$offset];
+        if (array_key_exists($offset, $this->innerDTODefault)) {
+            return $this->innerDTODefault[$offset];
         }
 
         throw new \InvalidArgumentException('Offset '.$offset.' does not exist.');
