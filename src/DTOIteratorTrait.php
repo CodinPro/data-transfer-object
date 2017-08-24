@@ -10,7 +10,7 @@ namespace CodinPro\DataTransferObject;
 
 /**
  * @property mixed $innerDTOData DTO data
- * @property array $default DTO keys and default values
+ * @property array $innerDTODefault DTO keys and default values
  */
 trait DTOIteratorTrait
 {
