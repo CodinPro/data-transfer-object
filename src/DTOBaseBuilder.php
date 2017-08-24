@@ -47,7 +47,7 @@ class DTOBaseBuilder
     private function validateFieldNames($data) {
         $restrictedFields = ['internalDTOData', 'internalDTODefault'];
         foreach ($restrictedFields as $field) {
-            if (isset($data[$field]) || isset($data->{$field})) {
+            if ((is_array($data) && isset($data[$field])) || (is_object($data) && isset($data->{$field}))) {
                 throw new \InvalidArgumentException('internalDTO* fields are restricted');
             }
         }
