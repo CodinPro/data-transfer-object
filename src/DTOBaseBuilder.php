@@ -41,13 +41,31 @@ class DTOBaseBuilder
     }
     
     /**
+     * Check if given array has given key
+     * @param $array
+     * @param $field
+     */
+    private function arrayHasField($array, $field) {
+        return is_array($array) && isset($array[$field]);
+    }
+    
+    /**
+     * Check if given object has given property
+     * @param $object
+     * @param $field
+     */
+    private function objectHasField($object, $field) {
+        return is_object($object) && isset($object->{$field});
+    }
+    
+    /**
      * Restrict internalDTO* fields in data
      * @param $data
      */
     private function validateFieldNames($data) {
         $restrictedFields = ['internalDTOData', 'internalDTODefault'];
         foreach ($restrictedFields as $field) {
-            if ((is_array($data) && isset($data[$field])) || (is_object($data) && isset($data->{$field}))) {
+            if ($this->arrayHasField($data, $field) || $this->objectHasField($data, $field)) {
                 throw new \InvalidArgumentException('internalDTO* fields are restricted');
             }
         }
