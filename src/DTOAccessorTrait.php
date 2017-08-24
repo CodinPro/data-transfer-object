@@ -9,8 +9,8 @@
 namespace CodinPro\DataTransferObject;
 
 /**
- * @property mixed $data DTO data
- * @property array $default DTO keys and default values
+ * @property mixed $innerDTOData DTO data
+ * @property array $innerDTODefault DTO keys and default values
  */
 trait DTOAccessorTrait
 {
@@ -28,7 +28,7 @@ trait DTOAccessorTrait
      */
     public function offsetExists($offset)
     {
-        return isset($this->data[$offset]);
+        return isset($this->innerDTOData[$offset]);
     }
 
     /**
@@ -39,8 +39,8 @@ trait DTOAccessorTrait
      */
     private function offsetGetScalar($offset)
     {
-        if (array_key_exists($offset, $this->data)) {
-            return $this->data[$offset];
+        if (array_key_exists($offset, $this->innerDTOData)) {
+            return $this->innerDTOData[$offset];
         }
 
         return $this->getDefaultValue($offset);
@@ -54,8 +54,8 @@ trait DTOAccessorTrait
      */
     private function getDefaultValue($offset)
     {
-        if (array_key_exists($offset, $this->default)) {
-            return $this->default[$offset];
+        if (array_key_exists($offset, $this->innerDTODefault)) {
+            return $this->innerDTODefault[$offset];
         }
 
         throw new \InvalidArgumentException('Offset '.$offset.' does not exist.');
@@ -79,7 +79,7 @@ trait DTOAccessorTrait
      */
     public function offsetSet($offset, $value)
     {
-        $this->data[$offset] = $value;
+        $this->innerDTOData[$offset] = $value;
     }
 
     /**
@@ -88,7 +88,7 @@ trait DTOAccessorTrait
      */
     public function offsetUnset($offset)
     {
-        unset($this->data[$offset]);
+        unset($this->innerDTOData[$offset]);
     }
 
     /**
@@ -97,7 +97,7 @@ trait DTOAccessorTrait
      */
     public function count()
     {
-        return count($this->data);
+        return count($this->innerDTOData);
     }
 
     public function __get($key)
@@ -112,6 +112,6 @@ trait DTOAccessorTrait
 
     public function __isset($key)
     {
-        return isset($this->data[$key]);
+        return isset($this->innerDTOData[$key]);
     }
 }

@@ -9,8 +9,8 @@
 namespace CodinPro\DataTransferObject;
 
 /**
- * @property mixed $data DTO data
- * @property array $default DTO keys and default values
+ * @property mixed $innerDTOData DTO data
+ * @property array $innerDTODefault DTO keys and default values
  */
 trait DTOIteratorTrait
 {
@@ -20,6 +20,6 @@ trait DTOIteratorTrait
      */
     public function getIterator()
     {
-        return new DTOIterator($this->data);
+        return new DTOIterator($this->innerDTOData);
     }
 }
