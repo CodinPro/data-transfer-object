@@ -228,7 +228,7 @@ class ExampleDTOTest extends \PHPUnit_Framework_TestCase
         }
     }
     
-    public function testInternalDdefaultNamingConflict()
+    public function testInternalDefaultNamingConflict()
     {
         try {
             $dto = new ExampleDTO(['internalDTODefault' => 'test']);
