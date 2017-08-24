@@ -8,7 +8,7 @@ use IteratorAggregate;
 
 class DTOBase implements ArrayAccess, IteratorAggregate, Countable
 {
-    protected $data;
+    protected $innerDTOData;
     protected $default = [];
     private $serializer = null;
 
@@ -66,7 +66,7 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
         if ($this->serializer instanceof JsonSerializer) {
             return json_decode($this->serialize(), true);
         } else {
-            return json_decode((new JsonSerializer())->serialize($this->data), true);
+            return json_decode((new JsonSerializer())->serialize($this->innerDTOData), true);
         }
     }
 
@@ -76,7 +76,7 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
      */
     private function serialize()
     {
-        return $this->serializer->serialize($this->data);
+        return $this->serializer->serialize($this->innerDTOData);
     }
 
     /**
@@ -115,7 +115,7 @@ class DTOBase implements ArrayAccess, IteratorAggregate, Countable
     private function processChain($offset)
     {
         $keys = explode('.', $offset);
-        $scope = $this->data;
+        $scope = $this->innerDTOData;
         foreach ($keys as $key) {
             $scope = $this->pickValue($scope, $key);
         }
