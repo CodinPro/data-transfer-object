@@ -218,4 +218,22 @@ class ExampleDTOTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $dto['foo.b.c.d']);
         $this->assertEquals(json_decode('{"d":"foo"}'), $dto->get('foo.b.c'));
     }
+    
+    public function testInternalDataNamingConflict()
+    {
+        try {
+            $dto = new ExampleDTO(['internalDTOData' => 'test']);
+        } catch (\Exception $e) {
+            $this->assertEquals('internalDTO* fields are restricted');
+        }
+    }
+    
+    public function testInternalDdefaultNamingConflict()
+    {
+        try {
+            $dto = new ExampleDTO(['internalDTODefault' => 'test']);
+        } catch (\Exception $e) {
+            $this->assertEquals('internalDTO* fields are restricted');
+        }
+    }
 }
