@@ -13,6 +13,15 @@ class ExampleDTOTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['a' => 'b'], $dto->get('extra'));
         $this->assertEquals(null, $dto->get('some'));
     }
+    
+    public function testBuildFromNonStandardArray()
+    {
+        $dto = new ExampleDTO(['a' => 'b', 'c' => 'd']);
+
+        $this->assertEquals('b', $dto->get('a'));
+        $this->assertEquals('d', $dto->get('c'));
+        $this->assertEquals(true, $dto->get('foo'));
+    }
 
     public function testBuildFromJson()
     {
