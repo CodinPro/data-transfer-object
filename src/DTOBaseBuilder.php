@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: vlitvinovs
- * Date: 2/8/17
- * Time: 4:28 PM
- */
 
 namespace CodinPro\DataTransferObject;
 
