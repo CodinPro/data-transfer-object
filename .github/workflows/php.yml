@@ -38,7 +38,7 @@ jobs:
     - name: Upload Scrutinizer coverage
       uses: sudo-bot/action-scrutinizer@latest
       with:
-        cli-args: "--format=php-clover build/logs/clover.xml
+        cli-args: "--format=php-clover build/logs/clover.xml"
     
     #- name: get scrutinizer
     #  run: wget https://scrutinizer-ci.com/ocular.phar
