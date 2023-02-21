@@ -16,6 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        # Fetch 10 commits or Scrutinizer will throw ("Failed to retrieve commit parents. If you use a shallow git checkout, please checkout at least a depth of one."), see: RepositoryIntrospector at scrutinizer-ci/ocular GitHub repository
+        # 10 commits is an arbitrary value that is more than 1 commit
+        fetch-depth: 10
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
@@ -34,11 +38,13 @@ jobs:
       
     - name: Tests
       run: mkdir -p build/logs && php vendor/bin/phpunit
-      
+   
     - name: Upload Scrutinizer coverage
       uses: sudo-bot/action-scrutinizer@latest
+      # Do not run this step on forked versions of the main repository (example: contributor forks)
+      if: github.repository == 'CodinPro/data-transfer-object'
       with:
-        cli-args: "--format=php-clover build/logs/clover.xml"
+        cli-args: "--format=php-clover build/logs/clover.xml --revision=${{ github.event.pull_request.head.sha || github.sha }}"
     
     #- name: get scrutinizer
     #  run: wget https://scrutinizer-ci.com/ocular.phar
