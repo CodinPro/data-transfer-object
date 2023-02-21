@@ -31,6 +31,12 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
+    
+    - name: get scrutinizer
+      run: wget https://scrutinizer-ci.com/ocular.phar
+
+    - name: run ocular
+      run: php ocular.phar code-coverage:upload --format=php-clover coverage.clover
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
