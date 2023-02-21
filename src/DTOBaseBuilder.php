@@ -2,10 +2,12 @@
 
 namespace CodinPro\DataTransferObject;
 
+use InvalidArgumentException;
+use JsonException;
+
 class DTOBaseBuilder
 {
-    /** @property DTOBase $dto */
-    private $dto;
+    private DTOBase $dto;
 
     public function __construct(DTOBase $dtoBase)
     {
@@ -15,9 +17,9 @@ class DTOBaseBuilder
     /**
      * Build DTO from given type of data
      * @param $data
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function build($data)
+    public function build($data): void
     {
         switch (gettype($data)) {
             case 'array':
@@ -30,38 +32,7 @@ class DTOBaseBuilder
                 $this->buildFromJson($data);
                 break;
             default:
-                throw new \InvalidArgumentException('DTO can be built from array|object|json, "'.gettype($data).'" given.');
-        }
-    }
-    
-    /**
-     * Check if given array has given key
-     * @param $array
-     * @param $field
-     */
-    private function arrayHasField($array, $field) {
-        return is_array($array) && isset($array[$field]);
-    }
-    
-    /**
-     * Check if given object has given property
-     * @param $object
-     * @param $field
-     */
-    private function objectHasField($object, $field) {
-        return is_object($object) && isset($object->{$field});
-    }
-    
-    /**
-     * Restrict internalDTO* fields in data
-     * @param $data
-     */
-    private function validateFieldNames($data) {
-        $restrictedFields = ['internalDTOData', 'internalDTODefault'];
-        foreach ($restrictedFields as $field) {
-            if ($this->arrayHasField($data, $field) || $this->objectHasField($data, $field)) {
-                throw new \InvalidArgumentException('internalDTO* fields are restricted');
-            }
+                throw new InvalidArgumentException('DTO can be built from array|object|json, "' . gettype($data) . '" given.');
         }
     }
 
@@ -69,11 +40,11 @@ class DTOBaseBuilder
      * Build DTO from provided data
      * @param $array
      */
-    private function buildFromArray($array)
+    private function buildFromArray($array): void
     {
         $this->validateFieldNames($array);
-        
-        foreach ($this->dto->getDefault() as $key => $value) {            
+
+        foreach ($this->dto->getDefault() as $key => $value) {
             if (isset($array[$key])) {
                 $this->dto[$key] = $array[$key];
             } else {
@@ -83,15 +54,50 @@ class DTOBaseBuilder
     }
 
     /**
+     * Restrict internalDTO* fields in data
+     * @param $data
+     */
+    private function validateFieldNames($data): void
+    {
+        $restrictedFields = ['internalDTOData', 'internalDTODefault'];
+        foreach ($restrictedFields as $field) {
+            if ($this->arrayHasField($data, $field) || $this->objectHasField($data, $field)) {
+                throw new InvalidArgumentException('internalDTO* fields are restricted');
+            }
+        }
+    }
+
+    /**
+     * Check if given array has given key
+     * @param $array
+     * @param $field
+     * @return bool
+     */
+    private function arrayHasField($array, $field): bool
+    {
+        return is_array($array) && isset($array[$field]);
+    }
+
+    /**
+     * Check if given object has given property
+     * @param $object
+     * @param $field
+     * @return bool
+     */
+    private function objectHasField($object, $field): bool
+    {
+        return is_object($object) && isset($object->{$field});
+    }
+
+    /**
      * Build DTO from provided data
      * @param $object
      */
-    private function buildFromObject($object)
+    private function buildFromObject($object): void
     {
         $this->validateFieldNames($object);
-        
+
         foreach ($this->dto->getDefault() as $key => $value) {
-            
             if (isset($object->{$key})) {
                 $this->dto[$key] = $object->{$key};
             } else {
@@ -102,19 +108,15 @@ class DTOBaseBuilder
 
     /**
      * Try to build from provided string as JSON
-     * @param string $data
-     * @throws \InvalidArgumentException
+     * @param  string  $data
+     * @throws JsonException
      */
-    private function buildFromJson($data)
+    private function buildFromJson(string $data): void
     {
-        $triedToDecodeData = json_decode($data);
+        $triedToDecodeData = json_decode($data, false, 512, JSON_THROW_ON_ERROR);
 
-        if ($triedToDecodeData !== null) {
+        if (is_object($triedToDecodeData)) {
             $this->buildFromObject($triedToDecodeData);
-        } else {
-            throw new \InvalidArgumentException(
-                'DTO can be built from array|object|json, "'.gettype($data).'" given. Probably tried to pass invalid JSON.'
-            );
         }
     }
 }

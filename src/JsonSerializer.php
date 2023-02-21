@@ -2,67 +2,70 @@
 
 namespace CodinPro\DataTransferObject;
 
+use JsonException;
+
 class JsonSerializer implements DTOSerializerInterface
 {
-    private $options;
-    private $depth;
+    private int $options;
+    private int $depth;
 
     /**
      * DTOSerializer constructor.
-     * @param int $options json_encode options (default: 0)
-     * @param int $depth json_encode depth (default: 512)
+     * @param  int  $options  json_encode options (default: 0)
+     * @param  int  $depth  json_encode depth (default: 512)
      */
-    public function __construct($options = 0, $depth = 512)
+    public function __construct(int $options = 0, int $depth = 512)
     {
         $this->options = $options;
         $this->depth = $depth;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDepth(): int
+    {
+        return $this->depth;
+    }
+
+    /**
+     * @param  int  $depth
+     * @return JsonSerializer
+     */
+    public function setDepth(int $depth): static
+    {
+        $this->depth = $depth;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOptions(): int
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param  int  $options
+     * @return JsonSerializer
+     */
+    public function setOptions(int $options): static
+    {
+        $this->options = $options;
+
+        return $this;
     }
 
     /**
      * Serialize given data to string
      * @param $data
      * @return string
+     * @throws JsonException
      */
-    public function serialize($data)
+    public function serialize($data): string
     {
-        return json_encode($data, $this->options, $this->depth);
-    }
-
-    /**
-     * @return int
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDepth()
-    {
-        return $this->depth;
-    }
-
-    /**
-     * @param int $options
-     * @return JsonSerializer
-     */
-    public function setOptions($options)
-    {
-        $this->options = $options;
-
-        return $this;
-    }
-
-    /**
-     * @param int $depth
-     * @return JsonSerializer
-     */
-    public function setDepth($depth)
-    {
-        $this->depth = $depth;
-
-        return $this;
+        return json_encode($data, JSON_THROW_ON_ERROR | $this->options, $this->depth);
     }
 }

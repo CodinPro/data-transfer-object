@@ -9,5 +9,5 @@ interface DTOSerializerInterface
      * @param $data
      * @return string
      */
-    public function serialize($data);
+    public function serialize($data): string;
 }

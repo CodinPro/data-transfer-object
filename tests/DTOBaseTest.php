@@ -1,21 +1,33 @@
 <?php
 
-namespace CodinPro\DataTransferObject;
+namespace CodinPro\Tests\DataTransferObject;
 
-class DTOTest extends \PHPUnit_Framework_TestCase
+use CodinPro\DataTransferObject\DTOBase;
+use CodinPro\DataTransferObject\DTOSerializerInterface;
+use CodinPro\DataTransferObject\ExampleDTO;
+use CodinPro\DataTransferObject\JsonSerializer;
+use Exception;
+use InvalidArgumentException;
+use JsonException;
+use PHPUnit\Framework\TestCase;
+
+class DTOBaseTest extends TestCase
 {
-    private static $initialData = [
+    private static array $initialData = [
         'test1' => 'one',
         'test3' => 'three',
     ];
-    private static $initialJsonData = '{"test1":"one","test3":"three"}';
-    private static $initialDefaultData = [
+    private static string $initialJsonData = '{"test1":"one","test3":"three"}';
+    private static array $initialDefaultData = [
         'test1' => '1',
         'test2' => '2',
         'test3' => '3',
     ];
 
-    public function testBuildFromArray()
+    /**
+     * @throws JsonException
+     */
+    public function testBuildFromArray(): void
     {
         $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
@@ -24,7 +36,36 @@ class DTOTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('three', $dto->get('test3'));
     }
 
-    public function testBuildFromJson()
+    public function testBuildFromInvalidDataType(): void
+    {
+        try {
+            $dto = new DTOBase(self::$initialDefaultData, 123);
+        } catch (Exception $e) {
+            $this->assertInstanceOf(InvalidArgumentException::class, $e);
+            $this->assertEquals(
+                'DTO can be built from array|object|json, "integer" given.',
+                $e->getMessage()
+            );
+        }
+
+        $this->assertFalse(isset($dto));
+    }
+
+    public function testBuildFromInvalidJson(): void
+    {
+        try {
+            $dto = new ExampleDTO('"test1":"one","test3":"three"');
+        } catch (Exception $e) {
+            $this->assertEquals('Syntax error', $e->getMessage());
+        }
+
+        $this->assertFalse(isset($dto));
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testBuildFromJson(): void
     {
         $dto = new DTOBase(self::$initialDefaultData, self::$initialJsonData);
 
@@ -33,9 +74,12 @@ class DTOTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('three', $dto->get('test3'));
     }
 
-    public function testBuildFromObject()
+    /**
+     * @throws JsonException
+     */
+    public function testBuildFromObject(): void
     {
-        $object = json_decode(self::$initialJsonData);
+        $object = json_decode(self::$initialJsonData, false, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals('object', gettype($object));
 
@@ -46,109 +90,10 @@ class DTOTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('three', $dto->get('test3'));
     }
 
-    public function testBuildFromInvalidJson()
-    {
-        try {
-            $dto = new DTOBase(self::$initialDefaultData, '"test1":"one","test3":"three"');
-        } catch (\Exception $e) {
-            $this->assertInstanceOf(\InvalidArgumentException::class, $e);
-            $this->assertEquals(
-                'DTO can be built from array|object|json, "string" given. Probably tried to pass invalid JSON.',
-                $e->getMessage()
-            );
-        }
-
-        $this->assertFalse(isset($dto));
-    }
-
-    public function testBuildFromInvalidDataType()
-    {
-        try {
-            $dto = new DTOBase(self::$initialDefaultData, 123);
-        } catch (\Exception $e) {
-            $this->assertInstanceOf(\InvalidArgumentException::class, $e);
-            $this->assertEquals(
-                'DTO can be built from array|object|json, "integer" given.',
-                $e->getMessage()
-            );
-        }
-
-        $this->assertFalse(isset($dto));
-    }
-
-    public function testSetValue()
-    {
-        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
-        $dto['test4'] = 'four';
-
-        $this->assertEquals('four', $dto->get('test4'));
-    }
-
-    public function testCount()
-    {
-        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
-
-        $this->assertEquals(count(array_keys(self::$initialDefaultData)), count($dto));
-    }
-
-    public function testOffsetExists()
-    {
-        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
-
-        $this->assertNotEmpty($dto['test1']);
-        $this->assertTrue(isset($dto['test1']));
-    }
-
-    public function testUnset()
-    {
-        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
-
-        unset($dto['test1']);
-
-        $this->assertEquals('1', $dto->get('test1'));
-    }
-
-    public function testGetNonExistentKey()
-    {
-        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
-
-        $key = 'nonExistentKey';
-
-        try {
-            $dto->get($key);
-        } catch (\Exception $e) {
-            $this->assertEquals('Offset ' . $key . ' does not exist.', $e->getMessage());
-            $this->assertInstanceOf(\InvalidArgumentException::class, $e);
-        }
-    }
-
-    public function testFieldGetter()
-    {
-        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
-
-        $this->assertEquals('one', $dto->test1);
-    }
-
-    public function testFieldSetter()
-    {
-        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
-
-        $dto->test1 = 'test1';
-
-        $isSet = isset($dto->test1);
-
-        $this->assertTrue($isSet);
-        $this->assertEquals('test1', $dto->test1);
-    }
-
-    public function testToString()
-    {
-        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
-
-        $this->assertEquals('{"test1":"one","test2":"2","test3":"three"}', (string)$dto);
-    }
-
-    public function testCanIterateDTO()
+    /**
+     * @throws JsonException
+     */
+    public function testCanIterateDTO(): void
     {
         $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
@@ -162,42 +107,50 @@ class DTOTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedArray, $gotArray);
     }
 
-    public function testIfSerializerSetFromConstructor()
-    {
-        $dto = new DTOBase([], [], $this->getMockBuilder(DTOSerializerInterface::class)->getMock());
-
-        $this->assertInstanceOf(
-            DTOSerializerInterface::class,
-            $dto->getSerializer(),
-            'Serializer must implement DTOSerializerInterface'
-        );
-    }
-
-    public function testIfSerializerNotSetFromConstructor()
-    {
-        $dto = new DTOBase([], []);
-
-        $this->assertInstanceOf(JsonSerializer::class, $dto->getSerializer(), 'Default serializer must be JsonSerializer');
-    }
-
-    public function testGetNonExistentKeyInChain()
+    /**
+     * @throws JsonException
+     */
+    public function testCount(): void
     {
         $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
-        $key = 'non.Existent.Key';
-
-        try {
-            $dto->get($key);
-        } catch (\Exception $e) {
-            $this->assertEquals('Non existent offset given in offset chain: non', $e->getMessage());
-            $this->assertInstanceOf(\InvalidArgumentException::class, $e);
-        }
+        $this->assertCount(count(array_keys(self::$initialDefaultData)), $dto);
     }
 
-    public function testGetKeyInChain()
+    /**
+     * @throws JsonException
+     */
+    public function testFieldGetter(): void
+    {
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
+
+        $this->assertEquals('one', $dto->test1);
+        $this->assertEquals('one', $dto->get('test1'));
+        $this->assertEquals(null, $dto->get('test10000'));
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testFieldSetter(): void
+    {
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
+
+        $dto->test1 = 'test1';
+
+        $isSet = isset($dto->test1);
+
+        $this->assertTrue($isSet);
+        $this->assertEquals('test1', $dto->test1);
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testGetKeyInChain(): void
     {
         $dto = new DTOBase(['a' => ['b' => ['c' => ['d' => 'foo']]]]);
-        $dto2 = new DTOBase(['a' => ['b' => ['c' => ['d' => false]]]], json_encode(['a' => ['b' => ['c' => ['d' => 'foo']]]]));
+        $dto2 = new DTOBase(['a' => ['b' => ['c' => ['d' => false]]]], json_encode(['a' => ['b' => ['c' => ['d' => 'foo']]]], JSON_THROW_ON_ERROR));
 
         $_dto = new \stdClass();
         $_dto2 = new \stdClass();
@@ -215,7 +168,101 @@ class DTOTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $dto3->get('a.b.c.d'));
     }
 
-    public function testToArrayWithDefaultSerializer()
+    /**
+     * @throws JsonException
+     */
+    public function testGetNonExistentKey(): void
+    {
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
+
+        $key = 'nonExistentKey';
+
+        try {
+            $dto->get($key, true);
+        } catch (Exception $e) {
+            $this->assertEquals('Offset ' . $key . ' does not exist.', $e->getMessage());
+            $this->assertInstanceOf(InvalidArgumentException::class, $e);
+        }
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testGetNonExistentKeyInChain(): void
+    {
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
+
+        $key = 'non.Existent.Key';
+
+        try {
+            $dto->get($key);
+        } catch (Exception $e) {
+            $this->assertEquals('Non existent offset given in offset chain: non', $e->getMessage());
+            $this->assertInstanceOf(InvalidArgumentException::class, $e);
+        }
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testIfSerializerNotSetFromConstructor(): void
+    {
+        $dto = new DTOBase([], []);
+
+        $this->assertInstanceOf(JsonSerializer::class, $dto->getSerializer(), 'Default serializer must be JsonSerializer');
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testIfSerializerSetFromConstructor(): void
+    {
+        $dto = new DTOBase([], [], $this->getMockBuilder(DTOSerializerInterface::class)->getMock());
+
+        $this->assertInstanceOf(
+            DTOSerializerInterface::class,
+            $dto->getSerializer(),
+            'Serializer must implement DTOSerializerInterface'
+        );
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testOffsetExists(): void
+    {
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
+
+        $this->assertNotEmpty($dto['test1']);
+        $this->assertTrue(isset($dto['test1']));
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testSetValue(): void
+    {
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
+        $dto['test4'] = 'four';
+
+        $this->assertEquals('four', $dto->get('test4'));
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testToArrayWithCustomSerializer(): void
+    {
+        $array = ['a' => ['b' => ['c' => ['d' => 'foo']]]];
+        $dto = new DTOBase($array, [], $this->getMockBuilder(DTOSerializerInterface::class)->getMock());
+
+        $this->assertEquals($array, $dto->toArray());
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testToArrayWithDefaultSerializer(): void
     {
         $array = ['a' => ['b' => ['c' => ['d' => 'foo']]]];
         $dto = new DTOBase(['a' => ['b' => ['c' => ['d' => 'foo']]]]);
@@ -223,11 +270,25 @@ class DTOTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($array, $dto->toArray());
     }
 
-    public function testToArrayWithCustomSerializer()
+    /**
+     * @throws JsonException
+     */
+    public function testToString(): void
     {
-        $array = ['a' => ['b' => ['c' => ['d' => 'foo']]]];
-        $dto = new DTOBase($array, [], $this->getMockBuilder(DTOSerializerInterface::class)->getMock());
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
 
-        $this->assertEquals($array, $dto->toArray());
+        $this->assertEquals('{"test1":"one","test2":"2","test3":"three"}', (string) $dto);
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testUnset(): void
+    {
+        $dto = new DTOBase(self::$initialDefaultData, self::$initialData);
+
+        unset($dto['test1']);
+
+        $this->assertEquals('1', $dto->get('test1'));
     }
 }

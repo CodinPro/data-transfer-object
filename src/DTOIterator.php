@@ -3,15 +3,13 @@
 namespace CodinPro\DataTransferObject;
 
 use Iterator;
+use ReturnTypeWillChange;
 
 class DTOIterator implements Iterator
 {
-    /** @var array $data */
-    private $data;
-    /** @var array $keys */
-    private $keys = null;
-    /** @var int $position Current iterator position */
-    protected $position;
+    private array $data;
+    private ?array $keys = null;
+    protected int $position;
 
     /**
      * DTOIterator constructor.
@@ -26,7 +24,7 @@ class DTOIterator implements Iterator
      * Get current element
      * @return mixed
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->data[$this->key()];
     }
@@ -34,7 +32,7 @@ class DTOIterator implements Iterator
     /**
      * Next iteration
      */
-    public function next()
+    #[ReturnTypeWillChange] public function next(): void
     {
         $this->position++;
     }
@@ -43,7 +41,7 @@ class DTOIterator implements Iterator
      * Get current key
      * @return mixed
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->getKeys()[$this->position];
     }
@@ -52,7 +50,7 @@ class DTOIterator implements Iterator
      * Check if current position key exists
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->getKeys()[$this->position]);
     }
@@ -60,16 +58,16 @@ class DTOIterator implements Iterator
     /**
      * Restart iterator
      */
-    public function rewind()
+    #[ReturnTypeWillChange] public function rewind(): void
     {
         $this->position = 0;
     }
 
     /**
      * Get array of keys and store them
-     * @return array
+     * @return array|null
      */
-    public function getKeys()
+    public function getKeys(): ?array
     {
         if ($this->keys === null) {
             $this->keys = array_keys($this->data);

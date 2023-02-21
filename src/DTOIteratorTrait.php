@@ -12,7 +12,7 @@ trait DTOIteratorTrait
      * Get custom iterator
      * @return DTOIterator
      */
-    public function getIterator()
+    public function getIterator(): DTOIterator
     {
         return new DTOIterator($this->innerDTOData);
     }

@@ -2,14 +2,15 @@
 
 namespace CodinPro\DataTransferObject;
 
+use JsonException;
+
 class DTO extends DTOBase
 {
-
     /**
      * DTO constructor.
-     * @param array|object|string $data
-     * @param DTOSerializerInterface|null $serializer
-     * @throws \InvalidArgumentException
+     * @param  array|object|string  $data
+     * @param  DTOSerializerInterface|null  $serializer
+     * @throws JsonException
      */
     public function __construct($data = [], $serializer = null)
     {
@@ -20,7 +21,7 @@ class DTO extends DTOBase
      * Get object variables defined in DTO
      * @return array
      */
-    private function collectVariables()
+    private function collectVariables(): array
     {
         $currentVariables = get_object_vars($this);
         $parentVariables = get_class_vars(parent::class);
