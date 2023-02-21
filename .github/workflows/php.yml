@@ -33,10 +33,12 @@ jobs:
       run: composer install --prefer-dist --no-progress
       
     - name: Tests
-      run: mkdir -p build/logs && php vendor/bin/phpunit --coverage-clover=coverage.clover
+      run: mkdir -p build/logs && php vendor/bin/phpunit
       
     - name: Upload Scrutinizer coverage
       uses: sudo-bot/action-scrutinizer@latest
+      with:
+        cli-args: "--format=php-clover build/logs/clover.xml --revision=${{ github.event.pull_request.head.sha || github.sha }}"
     
     #- name: get scrutinizer
     #  run: wget https://scrutinizer-ci.com/ocular.phar
